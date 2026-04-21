@@ -92,14 +92,19 @@
     transform: translateY(-4px) rotate(-0.4deg);
   }
 
-  /* The "inside pocket" card reveal: plain outside, red quatrefoil-print lining on hover */
+  /* The "inside pocket" card reveal: plain outside, patterned lining on hover.
+     --pocket-accent swaps per card (red default, teal variant). */
   .pocket {
     position: relative;
     background: var(--color-paper);
     transition: background-color 260ms ease, color 260ms ease, transform 260ms ease;
+    --pocket-accent: var(--color-red);
+  }
+  .pocket--teal {
+    --pocket-accent: var(--color-teal);
   }
   .pocket:hover {
-    background-color: var(--color-red);
+    background-color: var(--pocket-accent);
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g fill='%23fffbf0' fill-opacity='0.18'><circle cx='24' cy='12' r='7'/><circle cx='24' cy='36' r='7'/><circle cx='12' cy='24' r='7'/><circle cx='36' cy='24' r='7'/></g></svg>");
     background-size: 48px 48px;
     color: var(--color-paper);
@@ -115,12 +120,12 @@
   }
   .pocket:hover .pocket-pill {
     background: var(--color-paper);
-    color: var(--color-red);
+    color: var(--pocket-accent);
     border-color: var(--color-paper);
   }
   .pocket:hover .pocket-tag-bg {
     background: var(--color-paper);
-    color: var(--color-red);
+    color: var(--pocket-accent);
   }
 
   /* Exposed hem: the patterned "lining" revealed at page bottom */
