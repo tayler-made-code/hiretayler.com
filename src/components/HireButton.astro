@@ -1,0 +1,32 @@
+---
+interface Props {
+  label?: string;
+  variant?: 'sticky' | 'inline' | 'hero';
+  href?: string;
+}
+const { label = 'Hire me', variant = 'inline', href = '#contact' } = Astro.props;
+
+const base =
+  'inline-flex items-center gap-2 rounded-full font-semibold transition-all duration-150 ease-out will-change-transform border-2 border-[var(--color-rule)]';
+const sizes = {
+  sticky: 'px-5 py-2 text-sm',
+  inline: 'px-5 py-2.5 text-sm',
+  hero: 'px-7 py-4 text-base sm:text-lg',
+};
+const styles =
+  'bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[var(--color-red)] hover:border-[var(--color-red)] hover:-translate-y-0.5';
+
+const wrapCls =
+  variant === 'sticky'
+    ? 'fixed top-4 right-4 sm:top-6 sm:right-6 z-50'
+    : '';
+---
+<div class={wrapCls}>
+  <a href={href} class:list={[base, sizes[variant], styles]}>
+    <span>{label}</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14"></path>
+      <path d="M13 6l6 6-6 6"></path>
+    </svg>
+  </a>
+</div>

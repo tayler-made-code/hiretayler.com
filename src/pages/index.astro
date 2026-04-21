@@ -1,0 +1,250 @@
+---
+import Base from '../layouts/Base.astro';
+import HireButton from '../components/HireButton.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TailorForm from '../components/TailorForm.astro';
+
+const projects = [
+  {
+    title: 'Centsable',
+    year: '2025',
+    tag: 'Personal finance',
+    blurb:
+      "A finance app I actually open. Clean categorization, no shame-based dashboards, built to answer one question: where did the money go?",
+    image: '/images/centsable.jpg',
+    alt: 'Centsable product screenshot',
+    links: [{ label: 'Live site', href: 'https://centsable.app/' }],
+  },
+  {
+    title: 'Fellowship of Oklahoma Ale Makers',
+    year: 'ongoing',
+    tag: 'Webmaster',
+    blurb:
+      "I run the web presence for FOAM, Oklahoma's homebrewing fellowship. Content, events, and the site itself. Real org, real community.",
+    image: null,
+    alt: 'FOAM',
+    links: [],
+    symbol: '🍻',
+    bg: 'var(--color-teal)',
+  },
+  {
+    title: 'Cardinal: Tulsa Vending Co.',
+    year: 'in progress',
+    tag: 'Design system demo',
+    blurb:
+      "A demo site for a fictional Tulsa-area vending company, built on my Cardinal design system. Coming soon. A sibling project, isolated from the real Cardinal.",
+    image: null,
+    alt: 'Cardinal vending demo',
+    links: [],
+    symbol: '🥤',
+    bg: 'var(--color-red)',
+    placeholder: true,
+  },
+];
+
+const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
+---
+<Base>
+  <HireButton variant="sticky" label="Hire me" href="#contact" />
+
+  <main class="mx-auto max-w-6xl px-6 sm:px-10 pt-14 sm:pt-20 pb-24">
+    <!-- Status strip -->
+    <div class="mb-10 sm:mb-14 flex items-center gap-3 text-sm">
+      <span class="inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-rule)] bg-[var(--color-paper)] px-3 py-1 font-medium">
+        <span class="inline-block h-2 w-2 rounded-full bg-[var(--color-red)] animate-pulse"></span>
+        available for work
+      </span>
+      <span class="text-[var(--color-dim)]">Tulsa, OK &middot; remote-friendly</span>
+    </div>
+
+    <!-- Hero -->
+    <section class="pb-14 sm:pb-20">
+      <p class="rotate-in text-base sm:text-lg text-[var(--color-dim)] mb-4" style="animation-delay: 40ms;">
+        hey, I'm Tayler.
+      </p>
+      <h1
+        class="rotate-in text-[15vw] sm:text-[10vw] lg:text-[9rem] leading-[0.9] tracking-[-0.035em] font-bold"
+        style="animation-delay: 120ms;"
+      >
+        I build
+        <span class="relative inline-block">
+          <span
+            id="noun"
+            class="text-[var(--color-red)]"
+            style="font-family: var(--font-accent); font-style: italic; font-weight: 400;"
+            data-nouns={JSON.stringify(nouns)}
+          >things</span>
+        </span>
+        <br />
+        people actually use.
+      </h1>
+      <div class="rotate-in mt-10 sm:mt-14 flex flex-wrap items-center gap-4" style="animation-delay: 260ms;">
+        <HireButton variant="hero" label="Start a conversation" href="#contact" />
+        <a href="#work" class="link-underline text-base font-semibold">
+          See the work →
+        </a>
+      </div>
+    </section>
+
+    <!-- Big hard rule, bauhaus-style -->
+    <div class="h-[3px] bg-[var(--color-rule)] my-10"></div>
+
+    <!-- About -->
+    <section class="py-10 sm:py-16 grid gap-10 md:grid-cols-[1.3fr_1fr] items-start">
+      <div>
+        <p class="mb-4 text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold">
+          About
+        </p>
+        <h2 class="text-4xl sm:text-5xl tracking-tight mb-6 leading-[1.05]">
+          A full-stack engineer who treats <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">shipping</span> as the point.
+        </h2>
+        <p class="text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
+          I graduated from Atlas School after a twenty-month sprint that covered the stack front to back: React and Next.js on the front, Python and Node on the back, and enough C and data structures to respect both.
+        </p>
+        <p class="mt-4 text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
+          I build products that get opened, not just built. On the side I'm the webmaster for the Fellowship of Oklahoma Ale Makers, where good code meets good company.
+        </p>
+      </div>
+
+      <aside class="rounded-[28px] border-2 border-[var(--color-rule)] bg-[var(--color-paper)] p-6 sm:p-7">
+        <p class="text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold mb-4">
+          Stack I reach for
+        </p>
+        <ul class="flex flex-wrap gap-2">
+          {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Python', 'Node', 'Tailwind', 'Figma', 'PostgreSQL', 'Git'].map((s) => (
+            <li class="inline-flex items-center rounded-full border-2 border-[var(--color-rule)] px-3 py-1 text-sm font-semibold bg-[var(--color-paper)]">
+              {s}
+            </li>
+          ))}
+        </ul>
+
+        <p class="text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold mt-6 mb-3">
+          What I'm after
+        </p>
+        <p class="text-base text-[var(--color-ink)]/85 leading-relaxed">
+          A team that ships, cares about the craft, and enjoys the people they ship with.
+        </p>
+      </aside>
+    </section>
+
+    <div class="h-[3px] bg-[var(--color-rule)] my-10"></div>
+
+    <!-- Work -->
+    <section id="work" class="py-10 sm:py-16">
+      <div class="mb-8 sm:mb-12 flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <p class="mb-3 text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold">
+            Selected work
+          </p>
+          <h2 class="text-5xl sm:text-6xl tracking-tight leading-[0.95]">
+            What I'm building.
+          </h2>
+        </div>
+        <p class="text-[var(--color-dim)] text-base max-w-sm">
+          Hover a card. There's red inside. <span class="sock" aria-hidden="true">🧦</span>
+        </p>
+      </div>
+
+      <div class="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {projects.map((p) => <ProjectCard {...p} />)}
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="mt-14 sm:mt-20 rounded-[32px] bg-[var(--color-ink)] text-[var(--color-paper)] px-6 sm:px-12 py-14 sm:py-20 overflow-hidden relative">
+      <div class="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-[var(--color-red)] opacity-60 blur-3xl"></div>
+      <div class="absolute -bottom-20 -left-16 h-72 w-72 rounded-full bg-[var(--color-teal)] opacity-40 blur-3xl"></div>
+
+      <div class="relative">
+        <p class="text-xs uppercase tracking-[0.25em] text-[var(--color-red)] font-bold mb-6">
+          Let's talk
+        </p>
+        <h2 class="text-5xl sm:text-6xl tracking-tight leading-[0.95] max-w-3xl">
+          Looking for someone who will <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">actually ship</span>?
+        </h2>
+        <p class="mt-6 text-lg sm:text-xl text-[var(--color-paper)]/80 max-w-2xl">
+          Email is fastest. I reply within a day, usually sooner.
+        </p>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a
+            href="mailto:tayler.coon@gmail.com"
+            class="inline-flex items-center gap-2 rounded-full bg-[var(--color-red)] text-[var(--color-paper)] px-6 py-3 text-base font-semibold hover:-translate-y-0.5 transition-transform duration-150"
+          >
+            tayler.coon@gmail.com
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="M13 6l6 6-6 6"></path>
+            </svg>
+          </a>
+          <a
+            href="https://github.com/tayler-made-code"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-paper)]/30 px-6 py-3 text-base font-semibold hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] hover:border-[var(--color-paper)] transition-colors duration-150"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/taylercoon/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-paper)]/30 px-6 py-3 text-base font-semibold hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] hover:border-[var(--color-paper)] transition-colors duration-150"
+          >
+            LinkedIn
+          </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-paper)]/30 px-6 py-3 text-base font-semibold hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] hover:border-[var(--color-paper)] transition-colors duration-150"
+          >
+            Résumé (PDF)
+          </a>
+        </div>
+
+        <TailorForm />
+      </div>
+    </section>
+
+    <footer class="mt-12 flex items-center justify-between text-sm text-[var(--color-dim)]">
+      <span>&copy; {new Date().getFullYear()} Tayler Coon</span>
+      <span>no cookies, no trackers</span>
+    </footer>
+  </main>
+
+  <!-- The lining. If you scrolled this far, you get to see the print on the inside. -->
+  <div class="lining-stitch"></div>
+  <aside class="lining px-6 sm:px-10 py-8 text-sm sm:text-base font-semibold tracking-tight">
+    <div class="mx-auto max-w-6xl flex flex-wrap items-center justify-between gap-3">
+      <span>psst, you found the lining. <span aria-hidden="true">🪡</span></span>
+      <span class="opacity-90">thanks for scrolling all the way down. email me: <a href="mailto:tayler.coon@gmail.com" class="underline decoration-2 underline-offset-4 hover:no-underline">tayler.coon@gmail.com</a></span>
+    </div>
+  </aside>
+
+  <script>
+    const el = document.getElementById('noun');
+    if (el) {
+      const nouns = JSON.parse(el.dataset.nouns || '[]');
+      let i = 0;
+      const tick = () => {
+        i = (i + 1) % nouns.length;
+        el.style.transition = 'opacity 180ms ease, transform 180ms ease';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(6px)';
+        setTimeout(() => {
+          el.textContent = nouns[i];
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 200);
+      };
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReduced) {
+        el.textContent = nouns[0];
+        setInterval(tick, 2400);
+      } else {
+        el.textContent = nouns[0];
+      }
+    }
+  </script>
+</Base>

@@ -1,0 +1,97 @@
+---
+interface Link {
+  label: string;
+  href: string;
+}
+interface Props {
+  title: string;
+  year: string;
+  tag: string;
+  blurb: string;
+  image?: string | null;
+  alt?: string;
+  symbol?: string;
+  bg?: string;
+  placeholder?: boolean;
+  links: Link[];
+}
+const {
+  title,
+  year,
+  tag,
+  blurb,
+  image = null,
+  alt = '',
+  symbol = '',
+  bg = 'var(--color-bg)',
+  placeholder = false,
+  links,
+} = Astro.props;
+---
+<article
+  class={`pocket group relative overflow-hidden rounded-[28px] border-2 ${placeholder ? 'border-dashed' : ''} border-[var(--color-rule)] p-5 sm:p-6 flex flex-col`}
+>
+  <div
+    class="relative overflow-hidden rounded-[18px] aspect-[4/3] border border-[var(--color-rule)]/20 flex items-center justify-center"
+    style={image ? undefined : `background: ${bg}`}
+  >
+    {image ? (
+      <img
+        src={image}
+        alt={alt}
+        loading="eager"
+        decoding="async"
+        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+      />
+    ) : (
+      <span
+        class="text-[5rem] sm:text-[6rem] leading-none select-none transition-transform duration-500 ease-out group-hover:scale-110"
+        aria-hidden="true"
+      >
+        {symbol}
+      </span>
+    )}
+    <div
+      class="pocket-tag-bg absolute left-3 top-3 inline-flex items-center rounded-full bg-[var(--color-teal)] text-[var(--color-paper)] px-3 py-1 text-xs font-semibold tracking-wide uppercase"
+    >
+      {tag}
+    </div>
+    {placeholder && (
+      <div class="absolute right-3 top-3 inline-flex items-center rounded-full bg-[var(--color-ink)] text-[var(--color-paper)] px-3 py-1 text-xs font-semibold tracking-wide uppercase">
+        Soon
+      </div>
+    )}
+  </div>
+
+  <div class="mt-5 flex items-baseline justify-between gap-4">
+    <h3 class="pocket-ink text-2xl sm:text-3xl leading-tight tracking-tight">
+      {title}
+    </h3>
+    <span class="pocket-dim text-sm text-[var(--color-dim)] tabular-nums shrink-0">
+      {year}
+    </span>
+  </div>
+
+  <p class="pocket-ink mt-3 text-[15px] sm:text-base leading-relaxed text-[var(--color-ink)]/85">
+    {blurb}
+  </p>
+
+  {links.length > 0 && (
+    <div class="mt-5 flex flex-wrap gap-3">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="pocket-pill inline-flex items-center gap-1.5 rounded-full border-2 border-[var(--color-rule)] bg-[var(--color-paper)] px-4 py-1.5 text-sm font-semibold"
+        >
+          <span>{l.label}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"></path>
+            <path d="M7 7h10v10"></path>
+          </svg>
+        </a>
+      ))}
+    </div>
+  )}
+</article>
