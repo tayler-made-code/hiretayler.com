@@ -7,12 +7,13 @@ import TailorForm from '../components/TailorForm.astro';
 const projects = [
   {
     title: 'Centsable',
-    year: '2025',
-    tag: 'Personal finance',
+    year: '2024',
+    tag: 'Crowdfunding',
     blurb:
-      "A finance app I actually open. Clean categorization, no shame-based dashboards, built to answer one question: where did the money go?",
+      "Round-up donations that redirect spare change to local causes. I owned the product concept and led front-end on a four-week MVP sprint. React, Firebase, Plaid.",
     image: '/images/centsable.jpg',
     alt: 'Centsable product screenshot',
+    hover: 'teal',
     links: [{ label: 'Live site', href: 'https://centsable.app/' }],
   },
   {
@@ -30,15 +31,16 @@ const projects = [
   {
     title: 'Cardinal: Tulsa Vending Co.',
     year: 'in progress',
-    tag: 'Design system demo',
+    tag: 'Route planning',
     blurb:
-      "A demo site for a fictional Tulsa-area vending company, built on my Cardinal design system. Coming soon. A sibling project, isolated from the real Cardinal.",
+      "Route planning and territory management, shown through a fictional Tulsa vending co. A sibling demo, isolated from the production system. Next.js 15, TypeScript, Supabase.",
     image: null,
     alt: 'Cardinal vending demo',
     links: [],
     symbol: '🥤',
     bg: 'var(--color-red)',
     placeholder: true,
+    hover: 'teal',
   },
 ];
 
@@ -99,10 +101,13 @@ const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
           A full-stack engineer who treats <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">shipping</span> as the point.
         </h2>
         <p class="text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
-          I graduated from Atlas School after a twenty-month sprint that covered the stack front to back: React and Next.js on the front, Python and Node on the back, and enough C and data structures to respect both.
+          Before code I spent close to a decade in technical support at Apple, AT&amp;T, and Comcast, working my way from Tier 1 to floor lead and recruiter. Front-line problem-solving that translated cleanly into engineering.
         </p>
         <p class="mt-4 text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
-          I build products that get opened, not just built. On the side I'm the webmaster for the Fellowship of Oklahoma Ale Makers, where good code meets good company.
+          Then I graduated from Atlas School after a twenty-month sprint that covered the stack front to back: React and Next.js on the front, Python and Node on the back, and enough C and data structures to respect both.
+        </p>
+        <p class="mt-4 text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
+          Today I'm at WyoTech building Cardinal, a territory management platform for school admissions. On the side I'm the webmaster for the Fellowship of Oklahoma Ale Makers, where good code meets good company.
         </p>
       </div>
 
@@ -111,7 +116,7 @@ const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
           Stack I reach for
         </p>
         <ul class="flex flex-wrap gap-2">
-          {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Python', 'Node', 'Tailwind', 'Figma', 'PostgreSQL', 'Git'].map((s) => (
+          {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Python', 'Node', 'Tailwind', 'Figma', 'PostgreSQL', 'SQL', 'Supabase', 'Git'].map((s) => (
             <li class="inline-flex items-center rounded-full border-2 border-[var(--color-rule)] px-3 py-1 text-sm font-semibold bg-[var(--color-paper)]">
               {s}
             </li>
@@ -131,18 +136,13 @@ const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
 
     <!-- Work -->
     <section id="work" class="py-10 sm:py-16">
-      <div class="mb-8 sm:mb-12 flex items-end justify-between gap-6 flex-wrap">
-        <div>
-          <p class="mb-3 text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold">
-            Selected work
-          </p>
-          <h2 class="text-5xl sm:text-6xl tracking-tight leading-[0.95]">
-            What I'm building.
-          </h2>
-        </div>
-        <p class="text-[var(--color-dim)] text-base max-w-sm">
-          Hover a card. There's red inside. <span class="sock" aria-hidden="true">🧦</span>
+      <div class="mb-8 sm:mb-12">
+        <p class="mb-3 text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold">
+          Selected work
         </p>
+        <h2 class="text-5xl sm:text-6xl tracking-tight leading-[0.95]">
+          What I'm building.
+        </h2>
       </div>
 
       <div class="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -213,12 +213,12 @@ const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
     </footer>
   </main>
 
-  <!-- The lining. If you scrolled this far, you get to see the print on the inside. -->
+  <!-- The lining. Reaching the bottom is the whole point. -->
   <div class="lining-stitch"></div>
   <aside class="lining px-6 sm:px-10 py-8 text-sm sm:text-base font-semibold tracking-tight">
     <div class="mx-auto max-w-6xl flex flex-wrap items-center justify-between gap-3">
-      <span>psst, you found the lining. <span aria-hidden="true">🪡</span></span>
-      <span class="opacity-90">thanks for scrolling all the way down. email me: <a href="mailto:tayler.coon@gmail.com" class="underline decoration-2 underline-offset-4 hover:no-underline">tayler.coon@gmail.com</a></span>
+      <span>scrolled all the way down. respect.</span>
+      <span class="opacity-90">where to next: <a href="mailto:tayler.coon@gmail.com" class="underline decoration-2 underline-offset-4 hover:no-underline">tayler.coon@gmail.com</a></span>
     </div>
   </aside>
 

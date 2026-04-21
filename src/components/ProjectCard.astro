@@ -13,6 +13,7 @@ interface Props {
   symbol?: string;
   bg?: string;
   placeholder?: boolean;
+  hover?: 'red' | 'teal';
   links: Link[];
 }
 const {
@@ -25,11 +26,12 @@ const {
   symbol = '',
   bg = 'var(--color-bg)',
   placeholder = false,
+  hover = 'red',
   links,
 } = Astro.props;
 ---
 <article
-  class={`pocket group relative overflow-hidden rounded-[28px] border-2 ${placeholder ? 'border-dashed' : ''} border-[var(--color-rule)] p-5 sm:p-6 flex flex-col`}
+  class={`pocket ${hover === 'teal' ? 'pocket--teal' : ''} group relative overflow-hidden rounded-[28px] border-2 ${placeholder ? 'border-dashed' : ''} border-[var(--color-rule)] p-5 sm:p-6 flex flex-col`}
 >
   <div
     class="relative overflow-hidden rounded-[18px] aspect-[4/3] border border-[var(--color-rule)]/20 flex items-center justify-center"
