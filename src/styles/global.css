@@ -65,12 +65,12 @@
   .link-underline {
     background-image: linear-gradient(var(--color-teal), var(--color-teal));
     background-repeat: no-repeat;
-    background-position: 0 100%;
+    background-position: 0 calc(100% + 2px);
     background-size: 100% 2px;
     transition: background-size 200ms ease, color 200ms ease;
   }
   .link-underline:hover {
-    background-size: 100% 10px;
+    background-size: 100% 3px;
     color: var(--color-teal);
   }
 
