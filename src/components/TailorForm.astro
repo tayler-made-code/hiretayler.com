@@ -2,7 +2,10 @@
 // Client-rendered form that POSTs to the tailor API. The JS lives in an
 // island at the bottom of the file; markup here is the progressive-
 // enhancement fallback (the contact email still works without JS).
+// PUBLIC_TAILOR_ENABLED gates the real form. Dev defaults to "true";
+// production builds set it to "false" until the backend email flow is wired.
 const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
+const tailorEnabled = (import.meta.env.PUBLIC_TAILOR_ENABLED ?? 'true') !== 'false';
 ---
 <section
   id="tailor"
@@ -41,7 +44,13 @@ const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
     <span data-copy-feedback class="hidden text-xs text-[var(--color-red)] font-semibold">copied</span>
   </div>
 
-  <form id="tailor-form" class="mt-6 grid gap-4" data-api-base={apiBase}>
+  {!tailorEnabled && (
+    <div class="mt-6 rounded-2xl border border-[var(--color-paper)]/15 bg-[var(--color-paper)]/5 px-5 py-4 text-sm sm:text-base text-[var(--color-paper)]/80">
+      The tailor's out at lunch. In the meantime, just email me at <a href="mailto:tayler.coon@gmail.com" class="underline decoration-2 underline-offset-4 text-[var(--color-red)] font-semibold hover:no-underline">tayler.coon@gmail.com</a> and mention the role.
+    </div>
+  )}
+
+  <form id="tailor-form" class={`mt-6 grid gap-4 ${tailorEnabled ? '' : 'hidden'}`} data-api-base={apiBase}>
     <div class="grid sm:grid-cols-2 gap-4">
       <label class="flex flex-col gap-1.5">
         <span class="text-xs uppercase tracking-[0.2em] text-[var(--color-paper)]/70 font-bold">Your name</span>
