@@ -2,7 +2,10 @@
 // Client-rendered form that POSTs to the tailor API. The JS lives in an
 // island at the bottom of the file; markup here is the progressive-
 // enhancement fallback (the contact email still works without JS).
+// PUBLIC_TAILOR_ENABLED gates the real form. Dev defaults to "true";
+// production builds set it to "false" until the backend email flow is wired.
 const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
+const tailorEnabled = (import.meta.env.PUBLIC_TAILOR_ENABLED ?? 'true') !== 'false';
 ---
 <section
   id="tailor"
@@ -18,10 +21,61 @@ const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
   </div>
 
   <p class="mt-2 text-sm sm:text-base text-[var(--color-paper)]/75 max-w-2xl">
-    Three fields. I'll produce a résumé shaped around your posting. Prefer a terminal? Same brain answers <code class="font-mono text-[var(--color-red)]">ssh hire@hiretayler.com</code>.
+    Tell me about the role. I'll draft a résumé for it, and we'll have something to talk about.
   </p>
 
-  <form id="tailor-form" class="mt-6 grid gap-4" data-api-base={apiBase}>
+  <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-[var(--color-paper)]/70">
+    <span>Prefer a terminal?</span>
+    <button
+      type="button"
+      data-copy-ssh
+      aria-label="Copy ssh command"
+      class="group inline-flex items-center gap-2 rounded-full border border-[var(--color-paper)]/20 bg-[var(--color-paper)]/5 hover:bg-[var(--color-paper)]/15 transition-colors px-3 py-1.5"
+    >
+      <code class="font-mono text-[var(--color-red)] text-xs sm:text-sm">ssh hire@hiretayler.com</code>
+      <svg data-copy-icon width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-paper)]/60 group-hover:text-[var(--color-paper)]" aria-hidden="true">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      <svg data-check-icon width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="hidden text-[var(--color-red)]" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </button>
+    <span data-copy-feedback class="hidden text-xs text-[var(--color-red)] font-semibold">copied</span>
+  </div>
+
+  {!tailorEnabled && (
+    <div class="mt-6 rounded-2xl border border-[var(--color-paper)]/15 bg-[var(--color-paper)]/5 px-5 py-4 text-sm sm:text-base text-[var(--color-paper)]/80">
+      The tailor's out at lunch. In the meantime, just email me at <a href="mailto:tayler.coon@gmail.com" class="underline decoration-2 underline-offset-4 text-[var(--color-red)] font-semibold hover:no-underline">tayler.coon@gmail.com</a> and mention the role.
+    </div>
+  )}
+
+  <form id="tailor-form" class={`mt-6 grid gap-4 ${tailorEnabled ? '' : 'hidden'}`} data-api-base={apiBase}>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <label class="flex flex-col gap-1.5">
+        <span class="text-xs uppercase tracking-[0.2em] text-[var(--color-paper)]/70 font-bold">Your name</span>
+        <input
+          name="hirer_name"
+          type="text"
+          required
+          maxlength="120"
+          placeholder="Bruce Wayne"
+          class="rounded-full bg-[var(--color-paper)] text-[var(--color-ink)] px-4 py-2.5 text-base font-medium placeholder:text-[var(--color-dim)]/70 focus:outline-none focus:ring-2 focus:ring-[var(--color-red)]"
+        />
+      </label>
+      <label class="flex flex-col gap-1.5">
+        <span class="text-xs uppercase tracking-[0.2em] text-[var(--color-paper)]/70 font-bold">Your email</span>
+        <input
+          name="hirer_email"
+          type="email"
+          required
+          maxlength="200"
+          placeholder="bruce@wayneenterprises.com"
+          class="rounded-full bg-[var(--color-paper)] text-[var(--color-ink)] px-4 py-2.5 text-base font-medium placeholder:text-[var(--color-dim)]/70 focus:outline-none focus:ring-2 focus:ring-[var(--color-red)]"
+        />
+      </label>
+    </div>
+
     <div class="grid sm:grid-cols-2 gap-4">
       <label class="flex flex-col gap-1.5">
         <span class="text-xs uppercase tracking-[0.2em] text-[var(--color-paper)]/70 font-bold">Job title</span>
@@ -30,7 +84,7 @@ const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
           type="text"
           required
           maxlength="120"
-          placeholder="senior full-stack engineer"
+          placeholder="full-stack software engineer"
           class="rounded-full bg-[var(--color-paper)] text-[var(--color-ink)] px-4 py-2.5 text-base font-medium placeholder:text-[var(--color-dim)]/70 focus:outline-none focus:ring-2 focus:ring-[var(--color-red)]"
         />
       </label>
@@ -41,7 +95,7 @@ const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
           type="text"
           required
           maxlength="120"
-          placeholder="acme widgets"
+          placeholder="Wayne Enterprises"
           class="rounded-full bg-[var(--color-paper)] text-[var(--color-ink)] px-4 py-2.5 text-base font-medium placeholder:text-[var(--color-dim)]/70 focus:outline-none focus:ring-2 focus:ring-[var(--color-red)]"
         />
       </label>
@@ -55,7 +109,7 @@ const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
         minlength="30"
         maxlength="4000"
         rows="6"
-        placeholder="paste the posting here"
+        placeholder="paste it here, or just tell me about the role"
         class="rounded-2xl bg-[var(--color-paper)] text-[var(--color-ink)] px-4 py-3 text-base leading-relaxed placeholder:text-[var(--color-dim)]/70 focus:outline-none focus:ring-2 focus:ring-[var(--color-red)]"
       ></textarea>
     </label>
@@ -86,6 +140,32 @@ const apiBase = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8080';
 </section>
 
 <script>
+  // Copy-to-clipboard for the SSH command, with icon swap + feedback.
+  const sshBtn = document.querySelector<HTMLButtonElement>('[data-copy-ssh]');
+  if (sshBtn) {
+    const copyIcon = sshBtn.querySelector<SVGElement>('[data-copy-icon]');
+    const checkIcon = sshBtn.querySelector<SVGElement>('[data-check-icon]');
+    const feedback = document.querySelector<HTMLElement>('[data-copy-feedback]');
+    let reverting: ReturnType<typeof setTimeout> | null = null;
+    sshBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('ssh hire@hiretayler.com');
+        copyIcon?.classList.add('hidden');
+        checkIcon?.classList.remove('hidden');
+        feedback?.classList.remove('hidden');
+        if (reverting) clearTimeout(reverting);
+        reverting = setTimeout(() => {
+          copyIcon?.classList.remove('hidden');
+          checkIcon?.classList.add('hidden');
+          feedback?.classList.add('hidden');
+          reverting = null;
+        }, 1600);
+      } catch (err) {
+        console.error('clipboard:', err);
+      }
+    });
+  }
+
   const form = document.getElementById('tailor-form') as HTMLFormElement | null;
   if (form) {
     const apiBase = form.dataset.apiBase ?? '';

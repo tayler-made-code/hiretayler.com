@@ -33,6 +33,7 @@ jobs:
       - name: Build
         env:
           PUBLIC_API_URL: https://api.hiretayler.com
+          PUBLIC_TAILOR_ENABLED: "false"
         run: npm run build
 
       - name: Upload artifact
