@@ -6,15 +6,15 @@ import TailorForm from '../components/TailorForm.astro';
 
 const projects = [
   {
-    title: 'Centsable',
+    title: 'Common Cents',
     year: '2024',
     tag: 'Crowdfunding',
     blurb:
       "Round-up donations that redirect spare change to local causes. I owned the product concept and led front-end on a four-week MVP sprint. React, Firebase, Plaid.",
     image: '/images/centsable.jpg',
-    alt: 'Centsable product screenshot',
+    alt: 'Common Cents product screenshot',
     hover: 'teal',
-    links: [{ label: 'Live site', href: 'https://centsable.app/' }],
+    links: [{ label: 'Live site', href: 'https://commoncents.hiretayler.com/' }],
   },
   {
     title: 'AI Resume Tailor',
@@ -105,9 +105,15 @@ const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
           >things</span>
         </span>
         <br />
-        people actually use.
+        I wish existed.
       </h1>
-      <div class="rotate-in mt-10 sm:mt-14 flex flex-wrap items-center gap-4" style="animation-delay: 260ms;">
+      <p
+        class="rotate-in mt-4 sm:mt-6 text-3xl sm:text-4xl lg:text-5xl tracking-tight font-bold"
+        style="animation-delay: 200ms;"
+      >
+        <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">Yours next?</span>
+      </p>
+      <div class="rotate-in mt-10 sm:mt-14 flex flex-wrap items-center gap-4" style="animation-delay: 320ms;">
         <HireButton variant="hero" label="Start a conversation" href="#contact" />
         <a href="#work" class="link-underline text-base font-semibold">
           See the work →
@@ -124,8 +130,8 @@ const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
         <p class="mb-4 text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold">
           About
         </p>
-        <h2 class="text-4xl sm:text-5xl tracking-tight mb-6 leading-[1.05]">
-          A full-stack engineer who treats <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">shipping</span> as the point.
+        <h2 class="text-4xl sm:text-5xl tracking-tight mb-6 leading-[1.05] text-balance">
+          A full-stack engineer drawn to <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">problems worth solving.</span>
         </h2>
         <p class="text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
           I came to engineering by way of tech support. A decade at the Help Desk taught me how to listen past the noise, find the real problem, and bring other people up with me. I started on the phones and ended up running the floor and hiring the next wave. Help Desk work teaches you to untangle other people's messes long before you're the one writing code, and that most problems are simpler than they look once you stop panicking.
