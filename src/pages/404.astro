@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<Base
+  title="Page not found — Tayler Coon"
+  description="That page moved, retired, or never existed. Find Tayler Coon's selected work at hiretayler.com."
+  noindex
+>
+  <a class="skip-link" href="#missing">Skip to the message</a>
+
+  <SiteNav />
+
+  <main id="top">
+    <div class="wrap">
+      <header class="page-head" id="missing">
+        <p class="eyebrow">404</p>
+        <h1>Nothing here<em>.</em></h1>
+        <p class="page-lede">
+          That page moved, retired, or never existed. The work is still this way.
+        </p>
+        <p class="page-back">
+          <a class="btn" href="/#work">See the work</a>
+        </p>
+      </header>
+    </div>
+
+    <SiteFooter line="you found the edge. respect." />
+  </main>
+</Base>

@@ -4,11 +4,13 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
   title = 'Hire Tayler: Full-stack engineer',
   description = "Hey there, I'm Tayler. I build stuff. Full-stack engineer in Tulsa, OK, freelancing and open to a role on a team that ships.",
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
@@ -23,6 +25,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta name="theme-color" content="#0e0f11" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
 
     <meta property="og:type" content="website" />
