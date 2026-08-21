@@ -1,0 +1,188 @@
+---
+// Delivery is configurable. Set PUBLIC_FORM_ENDPOINT to a form provider URL
+// (Formspree, Web3Forms, Basin, a Worker, anything that accepts JSON POST) and
+// the modal submits on-site. With no endpoint set it falls back to composing a
+// mail draft, and the copy says so rather than pretending to send.
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+const email = 'tayler.coon@gmail.com';
+---
+<dialog id="inquiry" class="modal" aria-labelledby="inquiry-title" data-endpoint={endpoint} data-email={email}>
+  <div class="modal-head">
+    <div>
+      <p class="modal-eyebrow">Let's talk</p>
+      <h2 id="inquiry-title">Tell me about it</h2>
+    </div>
+    <button type="button" class="modal-close" data-close aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form id="inquiry-form" novalidate>
+      <!-- honeypot: real people leave this empty -->
+      <div class="hp" aria-hidden="true">
+        <label for="i-company">Company</label>
+        <input id="i-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="i-name">Your name</label>
+        <input id="i-name" name="name" type="text" autocomplete="name" required placeholder="who's writing" />
+      </div>
+
+      <div class="field">
+        <label for="i-email">Your email</label>
+        <input id="i-email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="where a reply should land" />
+      </div>
+
+      <div class="field">
+        <label for="i-kind">What brings you here?</label>
+        <select id="i-kind" name="kind">
+          <option>a project you want built</option>
+          <option>a role you're hiring for</option>
+          <option>a problem you're stuck on</option>
+          <option>something else</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="i-message">The short version</label>
+        <textarea id="i-message" name="message" rows="5" required placeholder="what it is, who it's for, and what's currently in the way"></textarea>
+      </div>
+
+      <p class="form-error" id="inquiry-error" role="alert" hidden></p>
+    </form>
+  </div>
+
+  <div class="modal-foot">
+    <button type="submit" form="inquiry-form" class="btn" data-submit>
+      <span data-idle>Send it</span>
+      <span data-busy hidden>Sending…</span>
+    </button>
+    <span class="modal-alt">
+      {endpoint
+        ? <>or email <a href={`mailto:${email}`}>{email}</a></>
+        : <>this opens your mail app with the message ready to send</>}
+    </span>
+  </div>
+
+  <div class="modal-done" data-done hidden>
+    <p class="done-mark" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </p>
+    <h3>Got it.</h3>
+    <p>I'm checking my email. Probably right now.</p>
+    <button type="button" class="btn btn--ghost" data-close>Close</button>
+  </div>
+</dialog>
+
+<script>
+  const modal = document.getElementById('inquiry') as HTMLDialogElement | null;
+
+  if (modal) {
+    const form = modal.querySelector('#inquiry-form') as HTMLFormElement;
+    const errorEl = modal.querySelector('#inquiry-error') as HTMLElement;
+    const submitBtn = modal.querySelector('[data-submit]') as HTMLButtonElement;
+    const idle = modal.querySelector('[data-idle]') as HTMLElement;
+    const busy = modal.querySelector('[data-busy]') as HTMLElement;
+    const done = modal.querySelector('[data-done]') as HTMLElement;
+    const head = modal.querySelector('.modal-head') as HTMLElement;
+    const body = modal.querySelector('.modal-body') as HTMLElement;
+    const foot = modal.querySelector('.modal-foot') as HTMLElement;
+    const endpoint = modal.dataset.endpoint || '';
+    const email = modal.dataset.email || '';
+
+    const open = () => {
+      if (!modal.open) modal.showModal();
+      document.documentElement.style.overflow = 'hidden';
+      // don't autofocus the first field: iOS yanks up the keyboard immediately
+      (modal.querySelector('[data-close]') as HTMLElement)?.focus();
+    };
+    const close = () => {
+      modal.close();
+      document.documentElement.style.overflow = '';
+    };
+
+    document.querySelectorAll('[data-open-inquiry]').forEach((el) =>
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        open();
+      })
+    );
+    modal.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
+    modal.addEventListener('close', () => {
+      document.documentElement.style.overflow = '';
+    });
+    // click on the backdrop (the dialog element itself) closes
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) close();
+    });
+
+    const showError = (msg: string) => {
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    };
+
+    const showDone = () => {
+      head.hidden = true;
+      body.hidden = true;
+      foot.hidden = true;
+      done.hidden = false;
+      (done.querySelector('[data-close]') as HTMLElement)?.focus();
+    };
+
+    const mailtoFallback = (data: Record<string, string>) => {
+      const subject = `${data.kind} — from ${data.name || 'your site'}`;
+      const lines = [data.message, '', `— ${data.name}`, data.email].join('\n');
+      window.location.href =
+        `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines)}`;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.hidden = true;
+
+      const fd = new FormData(form);
+      const data = Object.fromEntries(fd.entries()) as Record<string, string>;
+
+      if (data.company) return; // honeypot tripped, drop it silently
+      if (!data.name?.trim() || !data.message?.trim()) {
+        showError('A name and a message, and I can take it from there.');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || '')) {
+        showError("That email doesn't look right, and I'd hate to reply into the void.");
+        return;
+      }
+
+      if (!endpoint) {
+        mailtoFallback(data);
+        showDone();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      idle.hidden = true;
+      busy.hidden = false;
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        showDone();
+      } catch {
+        showError(
+          `That didn't go through. Email me directly at ${email} and I'll get it.`
+        );
+        submitBtn.disabled = false;
+        idle.hidden = false;
+        busy.hidden = true;
+      }
+    });
+  }
+</script>

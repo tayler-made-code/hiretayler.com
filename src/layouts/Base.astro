@@ -8,19 +8,19 @@ interface Props {
 
 const {
   title = 'Hire Tayler: Full-stack engineer',
-  description = "I'm a full-stack engineer. I think by making, and the things I build solve real problems. Got one? I'll solve yours. Tulsa, OK, remote-friendly.",
+  description = "Hey there, I'm Tayler. I build stuff. Full-stack engineer in Tulsa, OK, freelancing and open to a role on a team that ships.",
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 <!doctype html>
 <html lang="en">
-  <script is:inline>document.documentElement.classList.add('js');</script>
   <head>
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f4f1ea" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0e0f11" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -32,7 +32,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:image" content={new URL('/og.png', Astro.site).toString()} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="A friend thought you should see this. Find out why." />
+    <meta property="og:image:alt" content="Hey there, I'm Tayler. I build stuff. Full-stack engineer, Tulsa, OK, open to full-stack roles. hiretayler.com" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -41,43 +41,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" id="favicon" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <script is:inline>
-      (() => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const link = document.getElementById('favicon');
-        if (!link) return;
-        const canvas = document.createElement('canvas');
-        canvas.width = canvas.height = 64;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        let last = 0;
-        function tick(now) {
-          if (document.visibilityState === 'visible' && now - last >= 80) {
-            last = now;
-            const t = (now % 2000) / 2000;
-            const opacity = 0.75 + 0.25 * Math.cos(2 * Math.PI * t);
-            ctx.clearRect(0, 0, 64, 64);
-            ctx.globalAlpha = opacity;
-            ctx.fillStyle = '#d94a34';
-            ctx.beginPath();
-            ctx.arc(32, 32, 20, 0, 2 * Math.PI);
-            ctx.fill();
-            link.href = canvas.toDataURL('image/png');
-          }
-          requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-      })();
-    </script>
   </head>
-  <body class="grain">
+  <body>
     <slot />
   </body>
 </html>

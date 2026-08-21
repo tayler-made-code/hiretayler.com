@@ -1,6 +1,6 @@
 # hiretayler.com
 
-Tayler Coon's portfolio. Static site, Astro + Tailwind, deployed to GitHub Pages.
+Tayler Coon's portfolio. Static Astro site with hand-written CSS, deployed to GitHub Pages behind Cloudflare.
 
 ## Dev
 
@@ -25,7 +25,7 @@ In GitHub → Settings → Pages, set source to "GitHub Actions" and enable "Enf
 ## Structure
 
 - `src/pages/index.astro` — the whole site
-- `src/components/` — Prompt, Line, ProjectRow, Caret primitives
-- `src/layouts/Base.astro` — shared shell (meta tags, font load)
-- `src/styles/global.css` — Tailwind + theme tokens (`@theme` block)
-- `public/` — static passthroughs (CNAME, resume.pdf, graybox.html, favicons)
+- `src/components/` — navigation, project cards, project previews, inquiry dialog, and footer
+- `src/layouts/Base.astro` — shared document shell and social metadata
+- `src/styles/global.css` — design tokens and responsive page styles
+- `public/` — deployable images, social/favicons, CNAME, and the static résumé

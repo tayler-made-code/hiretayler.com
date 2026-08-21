@@ -1,0 +1,155 @@
+<dialog id="image-preview" class="image-preview" aria-labelledby="image-preview-title">
+  <div class="image-preview-head">
+    <div>
+      <p class="modal-eyebrow">Project preview</p>
+      <h2 id="image-preview-title">Full-size image</h2>
+    </div>
+    <div class="image-preview-actions">
+      <span class="image-preview-count" data-image-preview-count aria-live="polite" hidden></span>
+      <button type="button" class="image-preview-nav" data-image-preview-previous aria-label="Previous image" hidden>&larr;</button>
+      <button type="button" class="image-preview-nav" data-image-preview-next aria-label="Next image" hidden>&rarr;</button>
+      <button type="button" class="modal-close" data-image-preview-close aria-label="Close image preview">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="image-preview-stage" data-image-preview-stage>
+    <img
+      data-image-preview-target
+      src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+      alt=""
+      decoding="async"
+    />
+  </div>
+
+  <div class="image-preview-thumbs" data-image-preview-thumbs role="group" aria-label="Choose a project screen" hidden></div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('image-preview') as HTMLDialogElement | null;
+
+  if (dialog) {
+    interface PreviewItem {
+      src: string;
+      alt: string;
+      width: number;
+      height: number;
+    }
+
+    const image = dialog.querySelector('[data-image-preview-target]') as HTMLImageElement;
+    const title = dialog.querySelector('#image-preview-title') as HTMLElement;
+    const stage = dialog.querySelector('[data-image-preview-stage]') as HTMLElement;
+    const count = dialog.querySelector('[data-image-preview-count]') as HTMLElement;
+    const previous = dialog.querySelector('[data-image-preview-previous]') as HTMLButtonElement;
+    const next = dialog.querySelector('[data-image-preview-next]') as HTMLButtonElement;
+    const thumbnails = dialog.querySelector('[data-image-preview-thumbs]') as HTMLElement;
+    let opener: HTMLElement | null = null;
+    let items: PreviewItem[] = [];
+    let current = 0;
+
+    const close = () => {
+      if (dialog.open) dialog.close();
+    };
+
+    const show = (index: number) => {
+      if (!items.length) return;
+
+      current = (index + items.length) % items.length;
+      const item = items[current];
+      image.alt = item.alt;
+      image.width = item.width;
+      image.height = item.height;
+      if (image.src !== new URL(item.src, window.location.href).href) image.src = item.src;
+      stage.scrollTo({ top: 0, left: 0 });
+
+      const gallery = items.length > 1;
+      dialog.classList.toggle('image-preview--gallery', gallery);
+      count.hidden = !gallery;
+      previous.hidden = !gallery;
+      next.hidden = !gallery;
+      count.textContent = gallery ? `${current + 1} / ${items.length}` : '';
+      thumbnails.querySelectorAll<HTMLButtonElement>('[data-preview-index]').forEach((thumbnail, thumbnailIndex) => {
+        thumbnail.setAttribute('aria-current', String(thumbnailIndex === current));
+      });
+    };
+
+    const buildThumbnails = () => {
+      thumbnails.replaceChildren();
+      thumbnails.hidden = items.length < 2;
+      if (items.length < 2) return;
+
+      items.forEach((item, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'image-preview-thumb';
+        button.dataset.previewIndex = String(index);
+        button.setAttribute('aria-label', `View image ${index + 1} of ${items.length}`);
+
+        const thumbnail = document.createElement('img');
+        thumbnail.src = item.src;
+        thumbnail.alt = '';
+        thumbnail.width = item.width;
+        thumbnail.height = item.height;
+        thumbnail.loading = 'lazy';
+
+        button.append(thumbnail);
+        button.addEventListener('click', () => show(index));
+        thumbnails.append(button);
+      });
+    };
+
+    document.querySelectorAll<HTMLElement>('[data-preview-image], [data-preview-images]').forEach((control) => {
+      control.addEventListener('click', () => {
+        const gallery = control.dataset.previewImages;
+        if (gallery) {
+          try {
+            items = JSON.parse(gallery) as PreviewItem[];
+          } catch {
+            items = [];
+          }
+        } else {
+          const src = control.dataset.previewImage;
+          items = src ? [{
+            src,
+            alt: control.dataset.previewAlt || '',
+            width: Number(control.dataset.previewWidth) || 1920,
+            height: Number(control.dataset.previewHeight) || 1080,
+          }] : [];
+        }
+        if (!items.length) return;
+
+        opener = control;
+        title.textContent = control.dataset.previewTitle || 'Full-size image';
+        buildThumbnails();
+        show(0);
+        dialog.showModal();
+        document.documentElement.style.overflow = 'hidden';
+        (dialog.querySelector('[data-image-preview-close]') as HTMLElement)?.focus();
+      });
+    });
+
+    previous.addEventListener('click', () => show(current - 1));
+    next.addEventListener('click', () => show(current + 1));
+    dialog.querySelector('[data-image-preview-close]')?.addEventListener('click', close);
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      close();
+    });
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) close();
+    });
+    dialog.addEventListener('keydown', (event) => {
+      if (items.length < 2) return;
+      if (event.key === 'ArrowLeft') show(current - 1);
+      if (event.key === 'ArrowRight') show(current + 1);
+    });
+    dialog.addEventListener('close', () => {
+      document.documentElement.style.overflow = '';
+      dialog.classList.remove('image-preview--gallery');
+      opener?.focus();
+    });
+  }
+</script>

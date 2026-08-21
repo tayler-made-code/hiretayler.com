@@ -1,99 +1,112 @@
 ---
-interface Link {
-  label: string;
-  href: string;
+interface SpecLine {
+  k: string;
+  v: string;
+}
+interface PreviewImage {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
 }
 interface Props {
   title: string;
-  year: string;
-  tag: string;
-  blurb: string;
+  one: string;
+  status: string;
+  meta?: string;
+  /** omit when the project has nowhere public to go: the card renders as an
+      article instead of a link, so it never lands in the tab order */
+  href?: string;
   image?: string | null;
   alt?: string;
-  symbol?: string;
-  bg?: string;
-  placeholder?: boolean;
-  hover?: 'red' | 'teal';
-  links: Link[];
+  /** temporary destination for work that is not live yet: opens an accessible
+      full-size image dialog instead of pretending the project has a URL */
+  previewImage?: string;
+  previewAlt?: string;
+  previewWidth?: number;
+  previewHeight?: number;
+  previewImages?: PreviewImage[];
+  width?: number;
+  height?: number;
+  /** wide app screenshots read better cropped from the top-left */
+  cropTopLeft?: boolean;
+  /** preserve the complete screenshot inside the standard card frame */
+  containImage?: boolean;
+  eager?: boolean;
+  spec?: SpecLine[];
 }
 const {
   title,
-  year,
-  tag,
-  blurb,
+  one,
+  status,
+  meta = '',
+  href,
   image = null,
   alt = '',
-  symbol = '',
-  bg = 'var(--color-bg)',
-  placeholder = false,
-  hover = 'red',
-  links,
+  previewImage,
+  previewAlt,
+  previewWidth = 1920,
+  previewHeight = 1080,
+  previewImages = [],
+  width = 800,
+  height = 600,
+  cropTopLeft = false,
+  containImage = false,
+  eager = false,
+  spec = [],
 } = Astro.props;
+
+const hasGallery = previewImages.length > 0;
+const isPreview = Boolean((previewImage || hasGallery) && !href);
+const Tag = href ? 'a' : 'article';
+const external = href?.startsWith('http');
 ---
-<article
-  class={`pocket ${hover === 'teal' ? 'pocket--teal' : ''} group relative overflow-hidden rounded-[28px] border-2 ${placeholder ? 'border-dashed' : ''} border-[var(--color-rule)] p-5 sm:p-6 flex flex-col`}
+<Tag
+  class:list={['card', !href && 'card--static']}
+  href={href}
+  rel={external ? 'noopener' : undefined}
 >
-  <div
-    class="relative overflow-hidden rounded-[18px] aspect-[4/3] border border-[var(--color-rule)]/20 flex items-center justify-center"
-    style={image ? undefined : `background: ${bg}`}
-  >
+  <div class="media">
     {image ? (
       <img
+        class:list={['shot', cropTopLeft && 'shot--topleft', containImage && 'shot--contain']}
         src={image}
         alt={alt}
-        loading="eager"
+        width={width}
+        height={height}
+        loading={eager ? 'eager' : 'lazy'}
         decoding="async"
-        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
       />
     ) : (
-      <span
-        class="text-[5rem] sm:text-[6rem] leading-none select-none transition-transform duration-500 ease-out group-hover:scale-110"
-        aria-hidden="true"
-      >
-        {symbol}
-      </span>
-    )}
-    <div
-      class="pocket-tag-bg absolute left-3 top-3 inline-flex items-center rounded-full bg-[var(--color-teal)] text-[var(--color-paper)] px-3 py-1 text-xs font-semibold tracking-wide uppercase"
-    >
-      {tag}
-    </div>
-    {placeholder && (
-      <div class="absolute right-3 top-3 inline-flex items-center rounded-full bg-[var(--color-ink)] text-[var(--color-paper)] px-3 py-1 text-xs font-semibold tracking-wide uppercase">
-        Soon
+      <div class="spec">
+        {spec.map((line) => (
+          <div><b>{line.k}</b> {line.v}</div>
+        ))}
       </div>
     )}
   </div>
 
-  <div class="mt-5 flex items-baseline justify-between gap-4">
-    <h3 class="pocket-ink text-2xl sm:text-3xl leading-tight tracking-tight">
-      {title}
-    </h3>
-    <span class="pocket-dim text-sm text-[var(--color-dim)] tabular-nums shrink-0">
-      {year}
-    </span>
+  <h3>{title}</h3>
+  <p class="one card-dim">{one}</p>
+
+  <div class="foot">
+    <span class="dot">{status}</span>
+    {meta && <span class="card-dim">{meta}</span>}
   </div>
 
-  <p class="pocket-ink mt-3 text-[15px] sm:text-base leading-relaxed text-[var(--color-ink)]/85">
-    {blurb}
-  </p>
-
-  {links.length > 0 && (
-    <div class="mt-5 flex flex-wrap gap-3">
-      {links.map((l) => (
-        <a
-          href={l.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="pocket-pill inline-flex items-center gap-1.5 rounded-full border-2 border-[var(--color-rule)] bg-[var(--color-paper)] px-4 py-1.5 text-sm font-semibold"
-        >
-          <span>{l.label}</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M7 17L17 7"></path>
-            <path d="M7 7h10v10"></path>
-          </svg>
-        </a>
-      ))}
-    </div>
+  {isPreview && (
+    <button
+      type="button"
+      class="card-hit"
+      data-preview-image={!hasGallery ? previewImage : undefined}
+      data-preview-alt={previewAlt || alt}
+      data-preview-width={!hasGallery ? previewWidth : undefined}
+      data-preview-height={!hasGallery ? previewHeight : undefined}
+      data-preview-images={hasGallery ? JSON.stringify(previewImages) : undefined}
+      data-preview-title={title}
+      aria-haspopup="dialog"
+    >
+      <span class="sr-only">View {title} {hasGallery ? 'image gallery' : 'image at full size'}</span>
+    </button>
   )}
-</article>
+</Tag>

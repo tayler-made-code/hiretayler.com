@@ -1,0 +1,24 @@
+---
+interface Props {
+  /** the "scrolled all the way down" line only earns itself on the long page */
+  line?: string;
+}
+const { line = 'scrolled all the way down. respect.' } = Astro.props;
+---
+<footer class="hem">
+  <div class="wrap">
+    <div class="hem-top">
+      <span class="hem-line">{line}</span>
+      <span class="where">
+        <span>where to next:</span>
+        <a href="mailto:tayler.coon@gmail.com">tayler.coon@gmail.com</a>
+        <a href="https://github.com/tayler-made-code">GitHub</a>
+        <a href="https://www.linkedin.com/in/taylercoon/">LinkedIn</a>
+      </span>
+    </div>
+    <div class="hem-bottom">
+      <span>&copy; {new Date().getFullYear()} Tayler Coon</span>
+      <span>no cookies, no trackers</span>
+    </div>
+  </div>
+</footer>

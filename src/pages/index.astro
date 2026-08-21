@@ -1,276 +1,195 @@
 ---
 import Base from '../layouts/Base.astro';
-import HireButton from '../components/HireButton.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import TailorForm from '../components/TailorForm.astro';
+import InquiryModal from '../components/InquiryModal.astro';
+import ImagePreview from '../components/ImagePreview.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 const projects = [
   {
-    title: 'Common Cents',
-    year: '2024',
-    tag: 'Crowdfunding',
-    blurb:
-      "Round-up donations that redirect spare change to local causes. I owned the product concept and led front-end on a four-week MVP sprint. React, Firebase, Plaid.",
-    image: '/images/centsable.jpg',
-    alt: 'Common Cents product screenshot',
-    hover: 'teal',
-    links: [{ label: 'Live site', href: 'https://commoncents.hiretayler.com/' }],
+    title: 'Itty Bitty Budget Committee',
+    one: "The operating system for my household. Money, meals, and the 13-week calendar it all hangs off.",
+    status: 'Active',
+    meta: 'private · view screen',
+    image: '/images/ibbc-card.webp',
+    alt: 'IBBC Meal Rhythm screen showing a four-week cyclic meal plan',
+    previewImage: '/images/ibbc-full.webp',
+    previewAlt: 'IBBC Meal Rhythm app showing a four-week meal plan, daily meals, grocery outlook, and household navigation',
   },
   {
-    title: 'AI Resume Tailor',
-    year: '2026',
-    tag: 'AI / SSH',
-    blurb:
-      "The form above and `ssh hire@hiretayler.com` share the same Go backend. AI-tailored résumés, hardened against prompt injection, rate-limited.",
-    image: null,
-    alt: 'AI resume tailor',
-    links: [],
-    symbol: '✂️',
-    bg: 'var(--color-ink)',
-    hover: 'red',
+    title: 'Common Cents',
+    one: 'Round-up donations that send spare change to local causes. Concept and front-end lead, four-week MVP.',
+    status: 'Live',
+    meta: '2024',
+    href: 'https://commoncents.hiretayler.com/',
+    image: '/images/common-cents-card.webp',
+    alt: 'Common Cents dashboard showing impact totals, weekly allocations, recent roundups, and supported causes',
+    width: 800,
+    height: 450,
+    containImage: true,
   },
   {
     title: 'Fellowship of Oklahoma Ale Makers',
-    year: 'ongoing',
-    tag: 'Webmaster',
-    blurb:
-      "I run the web presence for FOAM, Oklahoma's homebrewing fellowship. Content, events, and the site itself. Real org, real community.",
-    image: null,
-    alt: 'FOAM',
-    links: [{ label: 'Live site', href: 'https://alemakers.org' }],
-    symbol: '🍻',
-    bg: 'var(--color-teal)',
+    one: 'I run the web presence for a real club with real members, which is a different job than shipping a demo.',
+    status: 'Ongoing',
+    meta: 'alemakers.org',
+    href: 'https://alemakers.org',
+    image: '/images/foam-card.webp',
+    alt: 'alemakers.org homepage: Better beer with good people',
   },
   {
     title: 'Cardinal',
-    year: 'in progress',
-    tag: 'Territory management',
-    blurb:
-      "A territory management platform with route planning built in. Built for teams that split a map between people and need to own every step of the work. Next.js 15, TypeScript, Supabase.",
-    image: null,
-    alt: 'Cardinal',
-    links: [],
-    symbol: '🧭',
-    bg: 'var(--color-red)',
-    placeholder: true,
-    hover: 'teal',
+    one: "Territory management with route planning built in, so the map and the day's route stop being two tools.",
+    status: 'Building',
+    meta: 'view 6 screens',
+    image: '/images/cardinal-card.webp',
+    alt: 'Cardinal week route and drive-time territory screens',
+    previewImages: [
+      { src: '/images/cardinal-today.webp', alt: 'Cardinal Today screen with schedule and territory tasks', width: 542, height: 1044 },
+      { src: '/images/cardinal-route.webp', alt: 'Cardinal week route with scheduled property visits', width: 542, height: 1044 },
+      { src: '/images/cardinal-insights.webp', alt: 'Cardinal territory insights with coverage and drive-time distribution', width: 542, height: 1044 },
+      { src: '/images/cardinal-map.webp', alt: 'Cardinal locations map with demo property markers around Tulsa', width: 542, height: 1044 },
+      { src: '/images/cardinal-drive-times.webp', alt: 'Cardinal locations map with drive-time territory boundaries', width: 542, height: 1044 },
+      { src: '/images/cardinal-locations.webp', alt: 'Cardinal locations list with drive-time and territory labels', width: 542, height: 1044 },
+    ],
   },
   {
-    title: 'Space Bar',
-    year: 'in progress',
-    tag: 'Taproom display',
-    blurb:
-      "A taproom menu board for home breweries and small bars. Backend's running; frontend rebuild in progress. Tuned for 10-foot reads and live pour updates.",
-    image: null,
-    alt: 'Space Bar taproom menu',
-    links: [],
-    symbol: '🍺',
-    bg: 'var(--color-teal)',
-    placeholder: true,
-    hover: 'red',
+    title: 'Draft Cast',
+    one: 'A taproom menu board tuned for a ten-foot read. Backend runs; the front end is mid-rebuild for distance.',
+    status: 'Building',
+    meta: 'view full menu',
+    image: '/images/draft-cast-card.webp',
+    alt: 'Draft Cast taproom menu showing six beers with styles, ABV, IBU, and descriptions',
+    previewImage: '/images/draft-cast-full.webp',
   },
 ];
-
-const nouns = ['tools', 'apps', 'sites', 'products', 'things'];
 ---
 <Base>
-  <HireButton variant="sticky" label="Hire me" href="#contact" />
+  <a class="skip-link" href="#work">Skip to the work</a>
 
-  <main class="mx-auto max-w-6xl px-6 sm:px-10 pt-14 sm:pt-20 pb-24">
-    <!-- Status strip -->
-    <div class="mb-10 sm:mb-14 flex items-center gap-3 text-sm">
-      <span class="inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-rule)] bg-[var(--color-paper)] px-3 py-1 font-medium">
-        <span class="inline-block h-2 w-2 rounded-full bg-[var(--color-red)] animate-pulse"></span>
-        available for work
-      </span>
-      <span class="text-[var(--color-dim)]">Tulsa, OK &middot; remote-friendly</span>
-    </div>
+  <SiteNav home />
 
-    <!-- Hero -->
-    <section class="pb-14 sm:pb-20">
-      <p class="rotate-in text-base sm:text-lg text-[var(--color-dim)] mb-4" style="animation-delay: 40ms;">
-        hey, I'm Tayler.
-      </p>
-      <h1
-        class="rotate-in text-[15vw] sm:text-[10vw] lg:text-[9rem] leading-[0.9] tracking-[-0.035em] font-bold"
-        style="animation-delay: 120ms;"
-      >
-        I build
-        <span class="relative inline-block">
-          <span
-            id="noun"
-            class="text-[var(--color-red)]"
-            style="font-family: var(--font-accent); font-style: italic; font-weight: 400;"
-            data-nouns={JSON.stringify(nouns)}
-          >things</span>
-        </span>
-        <br />
-        I wish existed.
-      </h1>
-      <p
-        class="rotate-in mt-4 sm:mt-6 text-3xl sm:text-4xl lg:text-5xl tracking-tight font-bold"
-        style="animation-delay: 200ms;"
-      >
-        <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">Yours next?</span>
-      </p>
-      <div class="rotate-in mt-10 sm:mt-14 flex flex-wrap items-center gap-4" style="animation-delay: 320ms;">
-        <HireButton variant="hero" label="Start a conversation" href="#contact" />
-        <a href="#work" class="link-underline text-base font-semibold">
-          See the work →
-        </a>
-      </div>
-    </section>
+  <main id="top">
+    <div class="wrap">
 
-    <!-- Big hard rule, bauhaus-style -->
-    <div class="h-[3px] bg-[var(--color-rule)] my-10"></div>
+      <!-- HERO -->
+      <header class="hero">
+        <p class="status">Open to full-stack roles · Tulsa, OK</p>
+        <div class="portrait">
+          <img src="/images/tayler.webp" alt="Tayler Coon" width="600" height="600" fetchpriority="high" decoding="async" />
+        </div>
+        <h1>
+          <span class="greeting">Hey there, I'm Tayler</span>
+          <em>I build stuff.</em>
+        </h1>
+        <div class="cta">
+          <a class="btn" href="#work">See the work</a>
+          <button class="btn btn--ghost" type="button" data-open-inquiry>Start a conversation</button>
+        </div>
+      </header>
 
-    <!-- About -->
-    <section class="py-10 sm:py-16 grid gap-10 md:grid-cols-[1.3fr_1fr] items-start">
-      <div>
-        <p class="mb-4 text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold">
-          About
-        </p>
-        <h2 class="text-4xl sm:text-5xl tracking-tight mb-6 leading-[1.05] text-balance">
-          A full-stack engineer drawn to <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">problems worth solving.</span>
-        </h2>
-        <p class="text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
-          I came to engineering by way of tech support. A decade at the Help Desk taught me how to listen past the noise, find the real problem, and bring other people up with me. I started on the phones and ended up running the floor and hiring the next wave. Help Desk work teaches you to untangle other people's messes long before you're the one writing code, and that most problems are simpler than they look once you stop panicking.
-        </p>
-        <p class="mt-4 text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
-          Atlas School came next. Twenty months of full-stack meant long days, paired work, and shipping something every week. React and Next.js on the front, Python and Node on the back, with enough C to know what's really happening underneath.
-        </p>
-        <p class="mt-4 text-lg leading-relaxed text-[var(--color-ink)]/85 max-w-prose">
-          Today I build projects that make my 9-to-5 easier. I think by making, and I learn fastest when there's a real problem on the other side of the keyboard. I want this to be the whole job. <a href="#contact" class="font-semibold text-[var(--color-red)] underline decoration-2 underline-offset-4 hover:decoration-4">Hire me</a> as a full-stack software engineer on a product team that ships.
-        </p>
-      </div>
+      <!-- ABOUT -->
+      <section class="band" id="about" aria-labelledby="about-h">
+        <h2 class="eyebrow" id="about-h">About</h2>
+        <div class="about">
+          <div>
+            <p>
+              I came to engineering through tech support. Ten years at the Help Desk
+              taught me how to listen past the noise, find the real problem, and
+              untangle a mess before reaching for a tool.
+            </p>
+            <p>
+              Atlas School gave me a new toolset: twenty months of full-stack work,
+              paired programming, and shipping something every week.
+            </p>
+            <p>
+              Now I freelance and build whatever keeps me curious. Give me a real
+              problem, good people, and something worth shipping.
+            </p>
+          </div>
+          <aside class="after">
+            <p class="after-label">What I'm after</p>
+            <blockquote>Work I'd tell my friends about, with people I'd meet for a beer<em>.</em></blockquote>
+            <ul class="stack">
+              <li>React</li><li>Next.js</li><li>TypeScript</li><li>Python</li>
+              <li>Node</li><li>PostgreSQL</li><li>Supabase</li><li>Figma</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
 
-      <aside class="md:sticky md:top-8 md:self-start rounded-[28px] border-2 border-[var(--color-rule)] bg-[var(--color-paper)] p-6 sm:p-7">
-        <p class="text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold mb-4">
-          Stack I reach for
-        </p>
-        <ul class="flex flex-wrap gap-2">
-          {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Python', 'Node', 'Tailwind', 'Figma', 'PostgreSQL', 'SQL', 'Supabase', 'Git'].map((s) => (
-            <li class="inline-flex items-center rounded-full border-2 border-[var(--color-rule)] px-3 py-1 text-sm font-semibold bg-[var(--color-paper)]">
-              {s}
-            </li>
-          ))}
-        </ul>
+      <!-- WHAT I DO -->
+      <section class="band" id="do" aria-labelledby="do-h">
+        <h2 class="eyebrow" id="do-h">What I do</h2>
+        <div class="do-row">
+          <span class="do-num">01</span>
+          <h3>Product engineering</h3>
+          <p>Front to back on web apps people actually open. React, Next.js and TypeScript on the screen, Node, Python, Postgres and Supabase behind it, and whatever else the project actually requires.</p>
+        </div>
+        <div class="do-row">
+          <span class="do-num">02</span>
+          <h3>Finding the problem</h3>
+          <p>Good solutions start with the right problem. I ask questions until the noise falls away and the thing that actually needs fixing is clear. Once I understand the problem, the path forward usually gets a lot shorter.</p>
+        </div>
+        <div class="do-row">
+          <span class="do-num">03</span>
+          <h3>Building the solution</h3>
+          <p>Workarounds are useful until they become the work. I build the system that removes the recurring problem, then make it simple enough to run without me. If I'm still needed to keep it moving, it isn't finished.</p>
+        </div>
+      </section>
 
-        <p class="text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold mt-6 mb-3">
-          What I'm after
-        </p>
-        <p class="text-base text-[var(--color-ink)]/85 leading-relaxed">
-          Work I'd tell my friends about, with people I'd meet for a beer.
-        </p>
-      </aside>
-    </section>
-
-    <div class="h-[3px] bg-[var(--color-rule)] my-10"></div>
-
-    <!-- Work -->
-    <section id="work" class="py-10 sm:py-16">
-      <div class="mb-8 sm:mb-12">
-        <p class="mb-3 text-xs uppercase tracking-[0.22em] text-[var(--color-teal)] font-bold">
-          Selected work
-        </p>
-        <h2 class="text-5xl sm:text-6xl tracking-tight leading-[0.95]">
-          What I'm building.
-        </h2>
-      </div>
-
-      <div class="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((p) => <ProjectCard {...p} />)}
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="mt-14 sm:mt-20 rounded-[32px] bg-[var(--color-ink)] text-[var(--color-paper)] px-6 sm:px-12 pt-12 pb-14 sm:pt-14 sm:pb-20 overflow-hidden relative">
-      <div class="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-[var(--color-red)] opacity-60 blur-3xl"></div>
-      <div class="absolute -bottom-20 -left-16 h-72 w-72 rounded-full bg-[var(--color-teal)] opacity-40 blur-3xl"></div>
-
-      <div class="relative">
-        <p class="text-xs uppercase tracking-[0.25em] text-[var(--color-red)] font-bold mb-6">
-          Let's talk
-        </p>
-        <h2 class="text-5xl sm:text-6xl tracking-tight leading-[0.95] max-w-3xl">
-          Looking for someone who <span style="font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-red);">actually builds</span>?
-        </h2>
-        <p class="mt-6 text-lg sm:text-xl text-[var(--color-paper)]/80 max-w-2xl">
-          I'm checking my email. Probably right now.
-        </p>
-
-        <div class="mt-10 flex flex-wrap gap-3">
-          <a
-            href="mailto:tayler.coon@gmail.com"
-            class="inline-flex items-center gap-2 rounded-full bg-[var(--color-red)] text-[var(--color-paper)] px-6 py-3 text-base font-semibold hover:-translate-y-0.5 transition-transform duration-150"
-          >
-            tayler.coon@gmail.com
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M13 6l6 6-6 6"></path>
-            </svg>
-          </a>
-          <a
-            href="https://github.com/tayler-made-code"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-paper)]/30 px-6 py-3 text-base font-semibold hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] hover:border-[var(--color-paper)] transition-colors duration-150"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://www.linkedin.com/in/taylercoon/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-paper)]/30 px-6 py-3 text-base font-semibold hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] hover:border-[var(--color-paper)] transition-colors duration-150"
-          >
-            LinkedIn
-          </a>
+      <!-- SELECTED WORK -->
+      <section class="band" id="work" aria-labelledby="work-h">
+        <p class="eyebrow">Selected work</p>
+        <div class="band-head">
+          <h2 id="work-h">Built to be used<em>.</em></h2>
+          <a class="more" href="https://github.com/tayler-made-code">All projects</a>
         </div>
 
-        <TailorForm />
-      </div>
-    </section>
+        <div class="work">
+          {projects.map((p) => <ProjectCard {...p} />)}
+        </div>
+      </section>
 
-    <footer class="mt-12 flex items-center justify-between text-sm text-[var(--color-dim)]">
-      <span>&copy; {new Date().getFullYear()} Tayler Coon</span>
-      <span>no cookies, no trackers</span>
-    </footer>
+      <!-- CURRENTLY -->
+      <section class="band currently" id="now" aria-labelledby="now-h">
+        <h2 class="eyebrow" id="now-h">Currently</h2>
+        <div class="row2">
+          <div>
+            <h3>Available for the right team<em>.</em></h3>
+            <p>
+              Freelancing now. Looking for a full-stack role with good people
+              building something worth shipping.
+            </p>
+          </div>
+          <a class="more" href="#talk">Get in touch &#8599;</a>
+        </div>
+      </section>
+
+      <!-- LET'S TALK -->
+      <section class="inquiry" id="talk" aria-labelledby="talk-h">
+        <p class="eyebrow">Let's talk</p>
+        <h2 id="talk-h">Looking for someone who <em>actually builds</em>?</h2>
+        <p class="punch">
+          <span>I'm checking my email</span>
+          <span>Probably right now</span>
+        </p>
+
+
+        <div class="actions">
+          <button class="btn" type="button" data-open-inquiry>Start here</button>
+          <span class="alt">
+            or email <a href="mailto:tayler.coon@gmail.com">tayler.coon@gmail.com</a>
+          </span>
+        </div>
+      </section>
+    </div>
+
+    <SiteFooter />
   </main>
 
-  <!-- The lining. Reaching the bottom is the whole point. -->
-  <div class="lining-stitch"></div>
-  <aside class="lining px-6 sm:px-10 py-8 text-sm sm:text-base font-semibold tracking-tight">
-    <div class="mx-auto max-w-6xl flex flex-wrap items-center justify-between gap-3">
-      <span>scrolled all the way down. respect.</span>
-      <span class="opacity-90">where to next: <a href="mailto:tayler.coon@gmail.com" class="underline decoration-2 underline-offset-4 hover:no-underline">tayler.coon@gmail.com</a></span>
-    </div>
-  </aside>
+  <InquiryModal />
+  <ImagePreview />
 
-  <script>
-    const el = document.getElementById('noun');
-    if (el) {
-      const nouns = JSON.parse(el.dataset.nouns || '[]');
-      let i = 0;
-      const tick = () => {
-        i = (i + 1) % nouns.length;
-        el.style.transition = 'opacity 180ms ease, transform 180ms ease';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(6px)';
-        setTimeout(() => {
-          el.textContent = nouns[i];
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 200);
-      };
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!prefersReduced) {
-        el.textContent = nouns[0];
-        setInterval(tick, 2400);
-      } else {
-        el.textContent = nouns[0];
-      }
-    }
-
-  </script>
 </Base>
